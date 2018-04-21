@@ -48,7 +48,7 @@ namespace Mongo.Controllers
                 Body = newNote.Body,
                 CreatedOn = DateTime.Now,
                 UpdatedOn = DateTime.Now,
-                UserId = newNote.UserId
+                UserId = GetUserId()
             });
         }
 
