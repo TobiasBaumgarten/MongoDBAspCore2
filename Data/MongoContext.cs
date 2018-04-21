@@ -4,11 +4,11 @@ using MongoDB.Driver;
 
 namespace Mongo.Data
 {
-    public class NoteContext
+    public class MongoContext
     {
         private readonly IMongoDatabase _database = null;
 
-        public NoteContext(IOptions<MongoDbSettings> settings)
+        public MongoContext(IOptions<MongoDbSettings> settings)
         {
             var client = new MongoClient(settings.Value.ConnectionString);
             if (client != null)
@@ -17,10 +17,11 @@ namespace Mongo.Data
 
         public IMongoCollection<Note> Notes
         {
-            get
-            {
-                return _database.GetCollection<Note>("Note");
-            }
+            get => _database.GetCollection<Note>("Note");
+        }
+
+        public IMongoCollection<ApplicationUser> Users{
+             get  => _database.GetCollection<ApplicationUser>("User");
         }
     }
 }

@@ -10,11 +10,11 @@ namespace Mongo.Data
 {
     public class NoteRepository : INoteRepository
     {
-        private readonly NoteContext _context = null;
+        private readonly MongoContext _context = null;
 
         public NoteRepository(IOptions<MongoDbSettings> settings)
         {
-            _context = new NoteContext(settings);
+            _context = new MongoContext(settings);
         }
 
         public async Task<IEnumerable<Note>> GetAllNotes()
@@ -31,15 +31,6 @@ namespace Mongo.Data
                             .Find(note => note.Id == id)
                             .FirstOrDefaultAsync();
         }
-        /* 
-                private ObjectId GetInternalId(string id)
-                {
-                    ObjectId internalId;
-                    if (!ObjectId.TryParse(id, out internalId))
-                        internalId = ObjectId.Empty;
-
-                    return internalId;
-                } */
 
         public async Task AddNote(Note item)
         {
