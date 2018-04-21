@@ -11,5 +11,6 @@ namespace Mongo.Data
          Task<IdentityResult> DeleteAsync(ApplicationUser user);
          Task<ApplicationUser> FindByIdAsync(Guid userId);
          Task<ApplicationUser> FindByNameAsync(string userName);
+         Task<ApplicationUser> FindByEmailAsync(string email);
     }
 }

@@ -49,9 +49,9 @@ namespace Mongo.Data
 
         public async Task<ApplicationUser> FindByIdAsync(Guid userId)
         {
-           return await _context.Users
-                .Find(u => u.Id == userId)
-                .FirstOrDefaultAsync();
+            return await _context.Users
+                 .Find(u => u.Id == userId)
+                 .FirstOrDefaultAsync();
         }
 
         public async Task<ApplicationUser> FindByNameAsync(string userName)
@@ -59,6 +59,14 @@ namespace Mongo.Data
             var normUserName = userName.ToUpper();
             return await _context.Users
                 .Find(u => u.NormalizedUserName == normUserName)
+                .FirstOrDefaultAsync();
+        }
+
+        public async Task<ApplicationUser> FindByEmailAsync(string email)
+        {
+            var normEmail = email.ToUpper();
+            return await _context.Users
+                .Find(u => u.NormalizedEmail == normEmail)
                 .FirstOrDefaultAsync();
         }
 

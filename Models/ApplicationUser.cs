@@ -8,6 +8,7 @@ namespace Mongo.Models
         public virtual Guid Id { get; set; } = Guid.NewGuid();
         public virtual string UserName { get; set; }
         public virtual string Email { get; set; }
+        public virtual string NormalizedEmail { get; set; }
         public virtual bool EmailConfirmed { get; set; }
         public virtual string PasswordHash { get; set; }
         public string NormalizedUserName { get; internal set; }

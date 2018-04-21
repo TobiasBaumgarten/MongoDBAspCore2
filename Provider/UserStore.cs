@@ -7,7 +7,7 @@ using Mongo.Models;
 
 namespace Mongo.Provider
 {
-    public class UserStore : IUserStore<Models.ApplicationUser>, IUserPasswordStore<Models.ApplicationUser>
+    public class UserStore : IUserStore<Models.ApplicationUser>, IUserPasswordStore<Models.ApplicationUser>, IUserEmailStore<Models.ApplicationUser>
     {
         private readonly IUserRepository repo;
 
@@ -36,6 +36,14 @@ namespace Mongo.Provider
         {
         }
 
+        public async Task<ApplicationUser> FindByEmailAsync(string normalizedEmail, CancellationToken cancellationToken)
+        {
+            cancellationToken.ThrowIfCancellationRequested();
+            if (normalizedEmail == null) throw new ArgumentNullException(nameof(normalizedEmail));
+
+            return await repo.FindByEmailAsync(normalizedEmail);
+        }
+
         public async Task<ApplicationUser> FindByIdAsync(string userId, CancellationToken cancellationToken = default(CancellationToken))
         {
             cancellationToken.ThrowIfCancellationRequested();
@@ -55,6 +63,28 @@ namespace Mongo.Provider
             if (normalizedUserName == null) throw new ArgumentNullException(nameof(normalizedUserName));
 
             return await repo.FindByNameAsync(normalizedUserName);
+        }
+
+        public Task<string> GetEmailAsync(ApplicationUser user, CancellationToken cancellationToken)
+        {
+            cancellationToken.ThrowIfCancellationRequested();
+            if (user == null) throw new ArgumentNullException(nameof(user));
+
+            return Task.FromResult(user.Email);
+        }
+
+        public Task<bool> GetEmailConfirmedAsync(ApplicationUser user, CancellationToken cancellationToken)
+        {
+            cancellationToken.ThrowIfCancellationRequested();
+            if (user == null) throw new ArgumentNullException(nameof(user));
+            return Task.FromResult(user.EmailConfirmed);
+        }
+
+        public Task<string> GetNormalizedEmailAsync(ApplicationUser user, CancellationToken cancellationToken)
+        {
+            cancellationToken.ThrowIfCancellationRequested();
+            if (user == null) throw new ArgumentNullException(nameof(user));
+            return Task.FromResult(user.NormalizedEmail);
         }
 
         public Task<string> GetNormalizedUserNameAsync(ApplicationUser user, CancellationToken cancellationToken)
@@ -95,6 +125,32 @@ namespace Mongo.Provider
             if (user == null) throw new ArgumentNullException(nameof(user));
 
             return Task.FromResult(user.PasswordHash != null || user.PasswordHash != string.Empty);
+        }
+
+        public Task SetEmailAsync(ApplicationUser user, string email, CancellationToken cancellationToken)
+        {
+            cancellationToken.ThrowIfCancellationRequested();
+            if (user == null) throw new ArgumentNullException(nameof(user));
+            if (email == null) throw new ArgumentNullException(nameof(email));
+            user.Email = email;
+            return Task.FromResult<object>(null);
+        }
+
+        public Task SetEmailConfirmedAsync(ApplicationUser user, bool confirmed, CancellationToken cancellationToken)
+        {
+            cancellationToken.ThrowIfCancellationRequested();
+            if (user == null) throw new ArgumentNullException(nameof(user));
+            user.EmailConfirmed = confirmed;
+            return Task.FromResult<object>(null);
+        }
+
+        public Task SetNormalizedEmailAsync(ApplicationUser user, string normalizedEmail, CancellationToken cancellationToken)
+        {
+            cancellationToken.ThrowIfCancellationRequested();
+            if (user == null) throw new ArgumentNullException(nameof(user));
+            if (normalizedEmail == null) throw new ArgumentNullException(nameof(normalizedEmail));
+            user.NormalizedEmail = normalizedEmail;
+            return Task.FromResult<object>(null);
         }
 
         public Task SetNormalizedUserNameAsync(ApplicationUser user, string normalizedName, CancellationToken cancellationToken)
