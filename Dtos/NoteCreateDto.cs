@@ -6,6 +6,5 @@ namespace Mongo.Dtos
     {
         public string Id { get; set; }
         public string Body { get; set; } = string.Empty;
-        public Guid UserId { get; set; }
     }
 }
