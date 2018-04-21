@@ -1,7 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Identity;
@@ -9,7 +11,9 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
+using Microsoft.IdentityModel.Tokens;
 using Mongo.Data;
+using Mongo.Helpers;
 using Mongo.Models;
 using Mongo.Provider;
 
@@ -48,6 +52,25 @@ namespace Mongo
                 .AddDefaultTokenProviders();
             services.AddTransient<IUserStore<ApplicationUser>, UserStore>();
             services.AddTransient<IUserRepository, UserRepository>();
+
+            // Authentication - Jwt Bearer
+            var keySecret = Configuration["JwtSigningKey"];
+            var symmetricKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(keySecret));
+            services.AddTransient(_ => new JwtSignInHandler(symmetricKey));
+            services.AddAuthentication(options =>
+            {
+                options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+            })
+            .AddJwtBearer(options =>
+            {
+                options.TokenValidationParameters = new TokenValidationParameters
+                {
+                    ValidateIssuerSigningKey = true,
+                    IssuerSigningKey = symmetricKey,
+                    ValidIssuer = JwtSignInHandler.TokenIssuer,
+                    ValidAudience = JwtSignInHandler.TokenAudience
+                };
+            });
 
         }
 
