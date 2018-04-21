@@ -64,6 +64,7 @@ namespace Mongo.Controllers
             {
                 new ClaimsIdentity(new[]
                 {
+                    new Claim(ClaimTypes.NameIdentifier, user.Id.ToString()),
                     new Claim(ClaimTypes.Name, user.UserName),
                 })
             });
