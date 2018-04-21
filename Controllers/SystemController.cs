@@ -38,28 +38,28 @@ namespace Mongo.Controllers
                         Body = "Test note 1",
                         CreatedOn = DateTime.Now,
                         UpdatedOn = DateTime.Now,
-                        UserId = 1
+                        UserId = new Guid("2f577b77-72bd-4e6f-9507-b52970f37762")
                     },
                     new Note()
                     {
                         Body = "Test note 2",
                         CreatedOn = DateTime.Now,
                         UpdatedOn = DateTime.Now,
-                        UserId = 1
+                        UserId = new Guid("2f577b77-72bd-4e6f-9507-b52970f37762")
                     },
                     new Note()
                     {
                         Body = "Test note 3",
                         CreatedOn = DateTime.Now,
                         UpdatedOn = DateTime.Now,
-                        UserId = 2
+                        UserId = new Guid("2f577b77-72bd-4e6f-9507-b52970f37762")
                     },
                     new Note()
                     {
-                        Body = "Test note 4",
+                        Body = "Other Users Note",
                         CreatedOn = DateTime.Now,
                         UpdatedOn = DateTime.Now,
-                        UserId = 2
+                        UserId = new Guid("2f577b77-72bd-4e6f-9507-b52970f37761")
                     }
                 };
                 notes.ForEach(n =>
