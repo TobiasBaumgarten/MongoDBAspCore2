@@ -82,6 +82,9 @@ namespace Mongo
                 app.UseDeveloperExceptionPage();
             }
 
+            // ! Use Authentication
+            app.UseAuthentication();
+
             app.UseMvc();
         }
     }

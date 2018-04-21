@@ -1,14 +1,18 @@
 using System;
 using System.Collections.Generic;
+using System.Security.Claims;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Mongo.Data;
 using Mongo.Dtos;
 using Mongo.Models;
 using MongoDB.Bson;
+using Mongo.Helpers;
 
 namespace Mongo.Controllers
 {
+    [Authorize]
     [Route("api/[controller]")]
     public class NotesController : Controller
     {
@@ -22,14 +26,16 @@ namespace Mongo.Controllers
         [HttpGet]
         public async Task<IEnumerable<Note>> Get()
         {
-            return await _noteRepository.GetAllNotes();
+            return await _noteRepository.GetAllNotes(GetUserId());
         }
 
         // GET api/notes/5 - retrieves a specific note using either Id or InternalId (BSonId)
         [HttpGet("{id}")]
-        public async Task<Note> Get(string id)
+        public async Task<IActionResult> Get(string id)
         {
-            return await _noteRepository.GetNote(id) ?? new Note();
+            var note = await _noteRepository.GetNote(GetUserId(), id);
+            if(note == null) return NotFound();
+            return Ok(note);
         }
 
         // POST api/notes - creates a new note
@@ -50,14 +56,16 @@ namespace Mongo.Controllers
         [HttpPut("{id}")]
         public void Put(string id, [FromBody]string value)
         {
-            _noteRepository.UpdateNote(id, value);
+            _noteRepository.UpdateNote(GetUserId(), id, value);
         }
 
         // DELETE api/notes/5 - deletes a specific note
         [HttpDelete("{id}")]
         public void Delete(string id)
         {
-            _noteRepository.RemoveNote(id);
+            _noteRepository.RemoveNote(GetUserId(), id);
         }
+
+        private Guid GetUserId() => new Guid(User.FindFirstValue(ClaimTypes.NameIdentifier));
     }
 }
