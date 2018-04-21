@@ -17,6 +17,6 @@ namespace Mongo.Models
         public string Body { get; set; } = string.Empty;
         public DateTime UpdatedOn { get; set; } = DateTime.Now;
         public DateTime CreatedOn { get; set; } = DateTime.Now;
-        public int UserId { get; set; } = 0;
+        public Guid UserId { get; set; }
     }
 }
